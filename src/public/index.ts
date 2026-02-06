@@ -33,23 +33,16 @@ async function displayTrainers() {
 
 async function displayPokemon(trainerid: string) {
     const trainer = document.querySelector<HTMLSelectElement>('#pokemonList');
-    if (!trainerPokemons.get(trainerid)) {
-        const pokemonList: Pokemon[] = await getPokemon(trainerid);
-        if (pokemonList.length === 0) {
-            trainer.textContent = "Trainer has no pokemon!";
-            trainerPokemons.set(trainerid, []);
-        } else {
-            const names = pokemonList.map(p => p.name);
-            const concatList = names.join(', ');
-            const arrayPokemon = pokemonList.map(p => p.name);
-            trainerPokemons.set(trainerid, arrayPokemon);
-        }
+    const pokemonList: Pokemon[] = await getPokemon(trainerid);
+    if (pokemonList.length === 0) {
+        trainer.textContent = "Trainer has no pokemon!";
+        trainerPokemons.set(trainerid, []);
     } else {
-        if (trainerPokemons.get(trainerid).length === 0) {
-            trainer.textContent = "Trainer has no pokemon!";
-        } else {
-           trainerPokemons.get(trainerid).join(', ');
-        }
+        const names = pokemonList.map(p => p.name);
+        const concatList = names.join(', ');
+        const arrayPokemon = pokemonList.map(p => p.name);
+        trainerPokemons.set(trainerid, arrayPokemon);
+        trainer.textContent = concatList;
     }
 }
 
