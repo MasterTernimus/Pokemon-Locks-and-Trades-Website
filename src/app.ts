@@ -22,8 +22,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-    origin: 'https://localhost:5000',
-    credentials: true
+origin: [
+        'http://trade.pokemonreborn-showdown.xy',
+        'https://trade.pokemonreborn-showdown.xy'
+    ],    credentials: true
 }));
 app.use(express.static(path.join(process.cwd(), 'public')));
 app.use('/dist/src/public', express.static(path.join(process.cwd(), 'dist/src/public')));
@@ -142,7 +144,7 @@ app.post("/api/user/validateUser", async (req, res) => {
     res.cookie("auth_token", token, {
         httpOnly: true,
         sameSite: "strict",
-        // secure: true, // enable in prod (HTTPS)
+        secure: true,
         maxAge: 24000 * 60 * 60,
     });
     return res.redirect(302, '/trainerselect.html');
