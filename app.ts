@@ -1,4 +1,4 @@
-import { DatabaseSync } from 'node:sqlite';
+ï»¿import { DatabaseSync } from 'node:sqlite';
 import express from 'express';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
@@ -59,7 +59,7 @@ app.get('/api/getTrainers', (req, res) => {
     const trainerList = Commands.qAllTrainers.all();
     if (!trainerList) return res.status(404).send('No trainers!');
 
-    // fetch and display the user's Pokémon
+    // fetch and display the user's PokÃ©mon
     res.json(trainerList);
 });
 
@@ -93,7 +93,7 @@ app.get('/api/getPokemon', (req, res) => {
     const trainer = Commands.qtrainerData.get(req.query.trainerName);
     if (!trainer) return res.status(404).send('User not found!');
     const pokemonList = Commands.qpokemonData.all(trainer.id);
-    // fetch and display the user's Pokémon
+    // fetch and display the user's PokÃ©mon
     res.json(pokemonList);
 
 });
@@ -243,7 +243,6 @@ app.post("/api/user/sendTrade", requireAuth, (req, res) => {
         if (pokemon.lock_status === 'hardlock') return res.status(409).json({ message: pokemonName + " is not tradeable!" });
     }
     const currentTime = Math.floor(Date.now() / 1000);
-
     try {
         database.exec('BEGIN');
 
@@ -261,7 +260,7 @@ app.post("/api/user/sendTrade", requireAuth, (req, res) => {
 
         if (!latesTradeId) throw new Error('Trade creation failed');
 
-        // 2. Give Pokémon
+        // 2. Give Pokï¿½mon
         for (const pokemonName of toGive as string[]) {
             const pokemon = Commands.qpokemonnameData.get(pokemonName);
             if (!pokemon) throw new Error('Pokemon not found');
@@ -277,7 +276,6 @@ app.post("/api/user/sendTrade", requireAuth, (req, res) => {
             );
         }
 
-        // 3. Receive Pokémon
         for (const pokemonName of toReceive as string[]) {
             const pokemon = Commands.qpokemonnameData.get(pokemonName);
             if (!pokemon) throw new Error('Pokemon not found');
@@ -295,12 +293,12 @@ app.post("/api/user/sendTrade", requireAuth, (req, res) => {
 
         database.exec('COMMIT');
         res.sendStatus(200);
-
     } catch (err) {
         database.exec('ROLLBACK');
         console.error(err);
         res.status(400).json({ message: err.message });
     }
+
     return res.status(200).json({ message: "Trade Sent!" });
 });
 
