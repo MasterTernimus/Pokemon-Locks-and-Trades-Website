@@ -145,7 +145,7 @@ app.post("/api/user/validateUser", async (req, res) => {
         // secure: true, // enable in prod (HTTPS)
         maxAge: 24000 * 60 * 60,
     });
-    return res.redirect(302, '/user/trainerSelect');
+    return res.redirect(302, '/trainerselect.html');
 });
 
 // Verification of JWT

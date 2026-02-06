@@ -82,7 +82,7 @@ async function validateSession() {
     });
      if (res.ok) {
         const userButton = document.querySelector<HTMLAnchorElement>('#userButton');
-        userButton.href = '/user/profile';
+        userButton.href = '/profile.html';
         userButton.textContent = 'Profile';
     }
 }
