@@ -80,10 +80,17 @@ async function validateSession() {
         method: 'GET',
         credentials: 'include',
     });
-     if (res.ok) {
-        const userButton = document.querySelector<HTMLAnchorElement>('#userButton');
-        userButton.href = '/profile.html';
-        userButton.textContent = 'Profile';
+    if (res.ok) {
+        const loginButton = document.querySelector<HTMLAnchorElement>('#loginButton');
+        const userButtons = document.querySelector<HTMLAnchorElement>('#userButtons');
+        const logout: HTMLAnchorElement = document.createElement('a');
+        logout.className = 'button-class';
+        logout.id = 'logoutButton';
+        logout.href = '/api/user/logoutUser';
+        userButtons.appendChild(logout);
+
+        loginButton.href = '/profile.html';
+        loginButton.textContent = 'Profile';
     }
 }
 
