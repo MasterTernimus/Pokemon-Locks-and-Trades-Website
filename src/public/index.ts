@@ -44,13 +44,11 @@ async function displayPokemon(trainerid: string) {
             const arrayPokemon = pokemonList.map(p => p.name);
             trainerPokemons.set(trainerid, arrayPokemon);
         }
-
-
     } else {
         if (trainerPokemons.get(trainerid).length === 0) {
             trainer.textContent = "Trainer has no pokemon!";
         } else {
-            if(trainerPokemons.get(trainerid).join(', ');
+            if(trainerPokemons.get(trainerid).join(', '));
         }
     }
 }
