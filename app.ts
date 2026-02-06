@@ -240,34 +240,63 @@ app.post("/user/sendTrade", requireAuth, (req, res) => {
         if (pokemon.lock_status === 'hardlock') return res.status(409).json({ message: pokemonName + " is not tradeable!" });
     }
     const currentTime = Math.floor(Date.now() / 1000);
+
     try {
-        Commands.itradeData.run(currentTrainer.id, tradePartner.id, 'pending', currentTime, null);
+        database.exec('BEGIN');
+
+        // 1. Create trade
+        const latestTrades = Commands.itradeData.run(
+            currentTrainer.id,
+            tradePartner.id,
+            'pending',
+            currentTime,
+            null
+        );
+
+        const latesTradeId = latestTrades.lastInsertRowid;
+
+
+        if (!latesTradeId) throw new Error('Trade creation failed');
+
+        // 2. Give Pokémon
+        for (const pokemonName of toGive as string[]) {
+            const pokemon = Commands.qpokemonnameData.get(pokemonName);
+            if (!pokemon) throw new Error('Pokemon not found');
+
+            Commands.ipokemontradeData.run(
+                latesTradeId,
+                pokemon.id,
+                currentTrainer.id,
+                tradePartner.id,
+                'pending',
+                currentTime,
+                null
+            );
+        }
+
+        // 3. Receive Pokémon
+        for (const pokemonName of toReceive as string[]) {
+            const pokemon = Commands.qpokemonnameData.get(pokemonName);
+            if (!pokemon) throw new Error('Pokemon not found');
+
+            Commands.ipokemontradeData.run(
+                latesTradeId,
+                pokemon.id,
+                tradePartner.id,
+                currentTrainer.id,
+                'pending',
+                currentTime,
+                null
+            );
+        }
+
+        database.exec('COMMIT');
+        res.sendStatus(200);
+
     } catch (err) {
-        console.log(err);
-    }
-    const latestTrade = database
-    .prepare(`
-        SELECT *
-        FROM tradeData
-        WHERE status = 'pending'
-        ORDER BY id DESC
-        LIMIT 1
-    `).get();
-    for (const pokemonName of toGive as Array<string>) {
-        const pokemon = Commands.qpokemonnameData.get(pokemonName);
-        try {
-            Commands.ipokemontradeData.run(latestTrade.id, pokemon.id, currentTrainer.id, tradePartner.id, 'pending', currentTime, null);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    for (const pokemonName of toReceive as Array<string>) {
-        const pokemon = Commands.qpokemonnameData.get(pokemonName);
-        try {
-            Commands.ipokemontradeData.run(latestTrade.id, pokemon.id, tradePartner.id, currentTrainer.id, 'pending', currentTime, null);
-        } catch (err) {
-            console.log(err);
-        }
+        database.exec('ROLLBACK');
+        console.error(err);
+        res.status(400).json({ message: err.message });
     }
     return res.status(200).json({ message: "Trade Sent!" });
 });
