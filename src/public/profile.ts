@@ -9,7 +9,6 @@ async function getPokemon(trainerName: string): Promise<Pokemon[]> {
 };
 
 async function displayPokemon(trainerName: string) {
-    console.log(trainerName);
     const trainer = document.querySelector<HTMLSelectElement>('#pokemonList');
     trainer.innerHTML = '';
     const pokemonList: Pokemon[] = await getPokemon(trainerName);
@@ -66,7 +65,6 @@ async function getTraders() {
     sessionStorage.setItem('currentTradePartner', (trainerSelector.childNodes[0] as HTMLOptionElement).value);
     trainerSelector.value = sessionStorage.getItem('currentTradePartner');
     const receiveForm = document.querySelector<HTMLFormElement>('#toReceive');
-    console.log(trainerSelector.value)
     displayTradeablePokemon(trainerSelector.value, receiveForm);
 };
 
@@ -77,7 +75,6 @@ function chosenTrainer() {
 }
 
 async function displayTradeablePokemon(trainerName: string, parentForm?: HTMLFormElement) {
-    console.log(trainerName);
     parentForm = parentForm ?? document.querySelector<HTMLFormElement>('#toGive');
     if (!parentForm) {
         throw new Error("A form is missing...?");

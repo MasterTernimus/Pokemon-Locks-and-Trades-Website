@@ -76,7 +76,7 @@ async function displayTrades() {
 }
 
 async function validateSession() {
-    const res = await fetch('/apihttp://localhost:5000/user/validateToken', {
+    const res = await fetch('/api/user/validateToken', {
         method: 'GET',
         credentials: 'include',
     });
