@@ -48,6 +48,13 @@ app.listen(PORT, () => {
     console.log(`Server is up and running on ${PORT} ...`);
 });
 
+app.get('/api/ping', (_, res) => res.json({ ok: true }));
+
+// SPA fallback
+app.get('*', (_, res) => {
+    res.sendFile(path.join(process.cwd(), 'dist/public/index.html'));
+});
+
 app.get('/api/getTrainers', (req, res) => {
     const trainerList = Commands.qAllTrainers.all();
     if (!trainerList) return res.status(404).send('No trainers!');
