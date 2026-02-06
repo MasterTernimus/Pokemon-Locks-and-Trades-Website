@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import path from 'path';
-import * as Commands from './src/sqliteCommands.js';
+import * as Commands from './sqliteCommands.js';
 
 const app = express();
 
@@ -49,11 +49,6 @@ app.listen(PORT, () => {
 });
 
 app.get('/api/ping', (_, res) => res.json({ ok: true }));
-
-// SPA fallback
-app.get('*', (_, res) => {
-    res.sendFile(path.join(process.cwd(), 'dist/public/index.html'));
-});
 
 app.get('/api/getTrainers', (req, res) => {
     const trainerList = Commands.qAllTrainers.all();
