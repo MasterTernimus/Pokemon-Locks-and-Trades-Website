@@ -150,6 +150,20 @@ app.post("/api/user/validateUser", async (req, res) => {
     return res.redirect(302, '/trainerselect.html');
 });
 
+app.post("/api/user/logoutUser", requireAuth, async (req, res) => {
+    const jwtSecretKey = process.env.JWT_SECRET_KEY;
+    if (!jwtSecretKey) {
+        return res.status(500).json({ message: "Server misconfigured" });
+    }
+    const tokenInformation = req.user;
+    const user = Commands.quserData.get(tokenInformation.username);
+    if (!user) {
+        return res.status(500).json({ message: "User not found, please inform Ternimus!" });
+    }
+    res.clearCookie("auth_token", { path: '/' });
+    return res.redirect(302, '/');
+});
+
 // Verification of JWT
 app.get("/api/user/validateToken", requireAuth, (req, res) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
