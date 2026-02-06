@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trainer Select</title>
+</head>
+<body>
+    <h1>Choose Trainers:</h1>
+    <div id="trainerList">
+
+    </div>
+    <hr />
+    <h1>Add Trainer!</h1>
+    <form method="POST" action="/user/addTrainer">
+        <label>
+            Trainer Name:
+            <input type="text" name="trainerName" required>
+        </label>
+        <br>
+        <button type="submit">Add</button>
+    </form>
+    <script type="module" src="/dist/src/public/trainerselect.js"></script>
+</body>
+</html>

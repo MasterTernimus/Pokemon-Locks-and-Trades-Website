@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/app.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@tsconfig/node22": "^22.0.5"
+  }
+}
