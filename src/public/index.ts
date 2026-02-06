@@ -35,13 +35,23 @@ async function displayPokemon(trainerid: string) {
     const trainer = document.querySelector<HTMLSelectElement>('#pokemonList');
     if (!trainerPokemons.get(trainerid)) {
         const pokemonList: Pokemon[] = await getPokemon(trainerid);
-        const names = pokemonList.map(p => p.name);
-        const concatList = names.join(', ');
-        trainer.textContent = concatList;
-        const arrayPokemon = pokemonList.map(p => p.name);
-        trainerPokemons.set(trainerid, arrayPokemon);
+        if (pokemonList.length === 0) {
+            trainer.textContent = "Trainer has no pokemon!";
+            trainerPokemons.set(trainerid, []);
+        } else {
+            const names = pokemonList.map(p => p.name);
+            const concatList = names.join(', ');
+            const arrayPokemon = pokemonList.map(p => p.name);
+            trainerPokemons.set(trainerid, arrayPokemon);
+        }
+
+
     } else {
-        trainer.textContent = trainerPokemons.get(trainerid).join(', ');
+        if (trainerPokemons.get(trainerid).length === 0) {
+            trainer.textContent = "Trainer has no pokemon!";
+        } else {
+            if(trainerPokemons.get(trainerid).join(', ');
+        }
     }
 }
 
