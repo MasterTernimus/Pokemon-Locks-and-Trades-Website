@@ -4,13 +4,13 @@ let trainerPokemons: Map<string, Array<string>> = new Map();
 let trades: Array<Array<string>> = [];
 
 async function getPokemon(trainerName: string): Promise<Pokemon[]> {
-    const response = await fetch(`/getPokemon?trainerName=${encodeURIComponent(trainerName)}`);
+    const response = await fetch(`/api/getPokemon?trainerName=${encodeURIComponent(trainerName)}`);
     if (!response.ok) throw new Error(response.status.toString());
     return await response.json();
 };
 
 async function getTrainers(): Promise<Trainer[]> {
-    const response = await fetch('/getTrainers');
+    const response = await fetch('/api/getTrainers');
     if (!response.ok) throw new Error(response.status.toString());
     return await response.json();
 };
@@ -46,7 +46,7 @@ async function displayPokemon(trainerid: string) {
 }
 
 async function getTrades(): Promise<Trade[]> {
-    const response = await fetch('/getTrades');
+    const response = await fetch('/api/getTrades');
     if (!response.ok) throw new Error(response.status.toString());
     return await response.json();
 }
@@ -76,7 +76,7 @@ async function displayTrades() {
 }
 
 async function validateSession() {
-    const res = await fetch('http://localhost:5000/user/validateToken', {
+    const res = await fetch('/apihttp://localhost:5000/user/validateToken', {
         method: 'GET',
         credentials: 'include',
     });

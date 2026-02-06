@@ -1,7 +1,7 @@
 import { Trainer } from './interfaces.js'
 
 async function getCharacters(): Promise<Trainer[]> {
-    const response = await fetch('/user/getTrainers', {
+    const response = await fetch('/api/user/getTrainers', {
         method: 'GET',
         credentials: 'include',
     });

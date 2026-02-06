@@ -48,11 +48,7 @@ app.listen(PORT, () => {
     console.log(`Server is up and running on ${PORT} ...`);
 });
 
-app.get('/', (req, res) => {
-    res.sendFile('C:\\Users\\chinm\\Desktop\\Chinmaya\\Code\\Websites\\Pokemon Trades\\public\\index.html');
-});
-
-app.get('/getTrainers', (req, res) => {
+app.get('/api/getTrainers', (req, res) => {
     const trainerList = Commands.qAllTrainers.all();
     if (!trainerList) return res.status(404).send('No trainers!');
 
@@ -60,7 +56,7 @@ app.get('/getTrainers', (req, res) => {
     res.json(trainerList);
 });
 
-app.get('/getTrades', (req, res) => {
+app.get('/api/getTrades', (req, res) => {
     const tradeInformation = Commands.qtradeData.all();
     let trades = [];
     for (const trade of tradeInformation) {
@@ -85,7 +81,7 @@ app.get('/getTrades', (req, res) => {
     return res.json(trades);
 });
 
-app.get('/getPokemon', (req, res) => {
+app.get('/api/getPokemon', (req, res) => {
     if (!req.query.trainerName) return res.status(404).json({ message: "Trainer unknwon!" });
     const trainer = Commands.qtrainerData.get(req.query.trainerName);
     if (!trainer) return res.status(404).send('User not found!');
@@ -98,7 +94,7 @@ app.get('/getPokemon', (req, res) => {
 
 // Main Code Here //
 // Generating JWT
-app.post("/user/generateUser", async (req, res) => {
+app.post("/api/user/generateUser", async (req, res) => {
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
     if (!jwtSecretKey) {
         return res.status(500).json({ message: "Server misconfigured" });
@@ -121,7 +117,7 @@ app.post("/user/generateUser", async (req, res) => {
 });
 
 // Validate Login
-app.post("/user/validateUser", async (req, res) => {
+app.post("/api/user/validateUser", async (req, res) => {
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
     if (!jwtSecretKey) {
         return res.status(500).json({ message: "Server misconfigured" });
@@ -151,12 +147,12 @@ app.post("/user/validateUser", async (req, res) => {
 });
 
 // Verification of JWT
-app.get("/user/validateToken", requireAuth, (req, res) => {
+app.get("/api/user/validateToken", requireAuth, (req, res) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
     return res.status(200).json({ message: "Successfully Verified"});
 });
 
-app.post("/user/addTrainer", requireAuth, (req, res) => {
+app.post("/api/user/addTrainer", requireAuth, (req, res) => {
    
     const { trainerName } = req.body;
     if (!trainerName) return res.status(400).json({ message: "Trainer name required!" });
@@ -178,7 +174,7 @@ app.post("/user/addTrainer", requireAuth, (req, res) => {
     return res.status(200).json({ message: "Trainer added" });
 });
 
-app.get("/user/getTrainers", requireAuth, (req, res) => {
+app.get("/api/user/getTrainers", requireAuth, (req, res) => {
     const tokenInformation = req.user;
 
     const user = Commands.quserData.get(tokenInformation.username);
@@ -187,7 +183,7 @@ app.get("/user/getTrainers", requireAuth, (req, res) => {
     return res.send(trainerList)
 });
 
-app.post("/user/addPokemon", requireAuth, (req, res) => {
+app.post("/api/user/addPokemon", requireAuth, (req, res) => {
     const tokenInformation = req.user;
 
     const { trainerName, pokemonName } = req.body;
@@ -213,7 +209,7 @@ app.post("/user/addPokemon", requireAuth, (req, res) => {
     return res.status(200).json({ message: "Added Pokemon" });
 });
 
-app.post("/user/sendTrade", requireAuth, (req, res) => {
+app.post("/api/user/sendTrade", requireAuth, (req, res) => {
     const tokenInformation = req.user;
     const { trainerName, partnerName, toGive, toReceive } = req.body;
     if ((!toGive && !toReceive) || !trainerName || !partnerName || !Array.isArray(toReceive) || !Array.isArray(toGive)) return res.status(400).json({ message: "Missing/Malformed Input" });
@@ -301,7 +297,7 @@ app.post("/user/sendTrade", requireAuth, (req, res) => {
     return res.status(200).json({ message: "Trade Sent!" });
 });
 
-app.get("/user/sentTrades", requireAuth, (req, res) => {
+app.get("/api/user/sentTrades", requireAuth, (req, res) => {
     const tokenInformation = req.user;
     if (!req.query.trainerName) return res.status(404).json({ message: "Trainer unknwon!" });
     const giveTrainer = req.query.trainerName;
@@ -334,7 +330,7 @@ app.get("/user/sentTrades", requireAuth, (req, res) => {
     return res.json(pendingTrades);
 });
 
-app.get("/user/receivedTrades", requireAuth, (req, res) => {
+app.get("/api/user/receivedTrades", requireAuth, (req, res) => {
     const tokenInformation = req.user;
     if (!req.query.trainerName) return res.status(404).json({ message: "Trainer unknwon!" });
     const giveTrainer = req.query.trainerName;
@@ -367,7 +363,7 @@ app.get("/user/receivedTrades", requireAuth, (req, res) => {
     return res.json(pendingTrades);
 });
 
-app.post("/user/acceptTrade", requireAuth, (req, res) => {
+app.post("/api/user/acceptTrade", requireAuth, (req, res) => {
     const tokenInformation = req.user;
     const { tradeId, trainerName } = req.body;
     if (!trainerName) return res.status(400).json({ message: "Choose your character please!" });
@@ -414,7 +410,7 @@ app.post("/user/acceptTrade", requireAuth, (req, res) => {
     }
 });
 
-app.post("/user/rejectTrade", requireAuth, (req, res) => {
+app.post("/api/user/rejectTrade", requireAuth, (req, res) => {
     const tokenInformation = req.user;
     const { tradeId, trainerName } = req.body;
     if (!trainerName) return res.status(400).json({ message: "Choose your character please!" });
@@ -435,7 +431,7 @@ app.post("/user/rejectTrade", requireAuth, (req, res) => {
     return res.status(200).json({ message: "Trade Rejected" });
 });
 
-app.post("/user/cancelTrade", requireAuth, (req, res) => {
+app.post("/api/user/cancelTrade", requireAuth, (req, res) => {
     const tokenInformation = req.user;
     const { tradeId, trainerName } = req.body;
     if (!trainerName) return res.status(400).json({ message: "Choose your character please!" });
@@ -456,7 +452,7 @@ app.post("/user/cancelTrade", requireAuth, (req, res) => {
     return res.status(200).json({ message: "Trade Rejected" });
 });
 
-app.post("/user/changeLockStatus", requireAuth, (req, res) => {
+app.post("/api/user/changeLockStatus", requireAuth, (req, res) => {
     const tokenInformation = req.user;
     const { trainerName, pokemonName, newStatus } = req.body;
     if (!trainerName || !pokemonName || !newStatus) return res.status(400).json({ message: "Missing/Malformed Input" });
@@ -478,17 +474,5 @@ app.post("/user/changeLockStatus", requireAuth, (req, res) => {
         console.error(err.message);
     }
     return res.status(200).json({ message: "Lock Status Changed!" });
-});
-
-app.get('/user/trainerSelect', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'public', 'trainerselect.html'));
-});
-
-app.get('/login', (req, res) => {
-    res.sendFile('C:\\Users\\chinm\\Desktop\\Chinmaya\\Code\\Websites\\Pokemon Trades\\public\\login.html');
-});
-
-app.get('/user/profile', (req, res) => {
-    res.sendFile('C:\\Users\\chinm\\Desktop\\Chinmaya\\Code\\Websites\\Pokemon Trades\\public\\profile.html');
 });
 

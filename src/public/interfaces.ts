@@ -31,7 +31,7 @@ export class Trainer {
     }
 
     async getPokemon(trainerName: string) {
-        const response = await fetch('/?ownedPokemon=' + trainerName);
+        const response = await fetch('/api/?ownedPokemon=' + trainerName);
         if (!response.ok) throw new Error(response.status.toString());
         this.ownedPokemon = await response.json() as Pokemon[];
     };

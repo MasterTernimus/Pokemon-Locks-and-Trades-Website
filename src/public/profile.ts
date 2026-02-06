@@ -3,7 +3,7 @@ import { Pokemon, Trainer, Trade } from './interfaces.js'
 
 
 async function getPokemon(trainerName: string): Promise<Pokemon[]> {
-    const response = await fetch(`/getPokemon?trainerName=${encodeURIComponent(trainerName)}`);
+    const response = await fetch(`/api/getPokemon?trainerName=${encodeURIComponent(trainerName)}`);
     if (!response.ok) throw new Error(response.status.toString());
     return await response.json();
 };
@@ -38,7 +38,7 @@ async function changeLockStatus(pokemonName: string, newStatus: string) {
     if (!trainerName) {
         throw new Error("You have not selected a character!");
     }
-    const response = await fetch('http://localhost:5000/user/changeLockStatus', {
+    const response = await fetch('/api/user/changeLockStatus', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -50,7 +50,7 @@ async function changeLockStatus(pokemonName: string, newStatus: string) {
 }
 
 async function getTraders() {
-    const response = await fetch('/getTrainers');
+    const response = await fetch('/api/getTrainers');
     if (!response.ok) throw new Error(response.status.toString());
     const trainers: Trainer[] = await response.json();
     const trainerSelector = document.querySelector<HTMLSelectElement>("#trainerName")
@@ -118,7 +118,7 @@ async function sendTrade() {
     if (!partnerName) {
         throw new Error("You have not selected a trade partner!");
     }
-    const response = await fetch('http://localhost:5000/user/sendTrade', {
+    const response = await fetch('/api/user/sendTrade', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -129,7 +129,7 @@ async function sendTrade() {
 }
 
 async function displayReceivedTrades(trainerName: string) {
-    const response = await fetch(`/user/receivedTrades?trainerName=${encodeURIComponent(trainerName)}`);
+    const response = await fetch(`/api/user/receivedTrades?trainerName=${encodeURIComponent(trainerName)}`);
     const tradeList = document.querySelector<HTMLSelectElement>("#receivedTrades");
     if (!response.ok) throw new Error(response.status.toString());
     const pendingTrades: Array<Trade> = await response.json();
@@ -156,7 +156,7 @@ async function displayReceivedTrades(trainerName: string) {
 }
 
 async function displaySentTrades(trainerName: string) {
-    const response = await fetch(`/user/sentTrades?trainerName=${encodeURIComponent(trainerName)}`);
+    const response = await fetch(`/api/user/sentTrades?trainerName=${encodeURIComponent(trainerName)}`);
     const tradeList = document.querySelector<HTMLSelectElement>("#sentTrades");
     if (!response.ok) throw new Error(response.status.toString());
     const pendingTrades: Array<Trade> = await response.json();
@@ -183,7 +183,7 @@ async function acceptTrade(tradeId: number) {
     if (!trainerName) {
         throw new Error("You have not selected a character!");
     }
-    const response = await fetch('http://localhost:5000/user/acceptTrade', {
+    const response = await fetch('/api/user/acceptTrade', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -201,7 +201,7 @@ async function rejectTrade(tradeId: number) {
     if (!trainerName) {
         throw new Error("You have not selected a character!");
     }
-    const response = await fetch('http://localhost:5000/user/rejectTrade', {
+    const response = await fetch('/api/user/rejectTrade', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -216,7 +216,7 @@ async function cancelTrade(tradeId: number) {
     if (!trainerName) {
         throw new Error("You have not selected a character!");
     }
-    const response = await fetch('http://localhost:5000/user/cancelTrade', {
+    const response = await fetch('/api/user/cancelTrade', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -245,7 +245,7 @@ async function initialize() {
             }
             const form = e.currentTarget as HTMLFormElement;
             const pokemonName = (form.elements.namedItem('pokemonName') as HTMLInputElement).value;
-            fetch('http://localhost:5000/user/addPokemon', {
+            fetch('/api/user/addPokemon', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
