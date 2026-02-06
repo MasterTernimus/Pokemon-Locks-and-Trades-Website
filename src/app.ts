@@ -150,7 +150,7 @@ app.post("/api/user/validateUser", async (req, res) => {
     return res.redirect(302, '/trainerselect.html');
 });
 
-app.post("/api/user/logoutUser", requireAuth, async (req, res) => {
+app.get("/api/user/logoutUser", requireAuth, async (req, res) => {
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
     if (!jwtSecretKey) {
         return res.status(500).json({ message: "Server misconfigured" });
