@@ -84,6 +84,7 @@ async function validateSession() {
         const loginButton = document.querySelector<HTMLAnchorElement>('#loginButton');
         const userButtons = document.querySelector<HTMLAnchorElement>('#userButtons');
         const logout: HTMLAnchorElement = document.createElement('a');
+        logout.textContent = 'Logout';
         logout.className = 'button-class';
         logout.id = 'logoutButton';
         logout.href = '/api/user/logoutUser';
