@@ -217,7 +217,7 @@ app.post("/api/user/addPokemon", requireAuth, (req, res) => {
     const pokemon = Commands.qpokemonnameData.get(pokemonName);
     if (!pokemon) return res.status(404).json({ message: "That pokemon does not exist!" });
 
-    if (user.id !== trainer.id) return res.status(403).json({ message: "You do not own that trainer!" });
+    if (user.id !== trainer.owner_id) return res.status(403).json({ message: "You do not own that trainer!" });
     if (pokemon.owner_id != null) return res.status(403).json({ message: "That pokemon is not lockable!" });
     try {
         Commands.upokemonNameData.run('hardlock', trainer.id, pokemonName);
